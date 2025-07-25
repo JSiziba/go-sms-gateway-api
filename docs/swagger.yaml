@@ -1,0 +1,88 @@
+basePath: /api/v1
+definitions:
+  models.SMSMessage:
+    properties:
+      createdAt:
+        type: string
+      deliveryStatus:
+        type: string
+      id:
+        type: string
+      message:
+        type: string
+      phoneNumber:
+        type: string
+    type: object
+  models.SMSMessageRequestDto:
+    properties:
+      message:
+        type: string
+      phoneNumber:
+        type: string
+    required:
+    - message
+    - phoneNumber
+    type: object
+host: localhost:1949
+info:
+  contact: {}
+  description: SMS Gateway Server
+  title: SMS Gateway
+  version: "1.0"
+paths:
+  /messages/publish:
+    post:
+      consumes:
+      - application/json
+      description: Publish a message to the server
+      parameters:
+      - description: Message to publish
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/models.SMSMessageRequestDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SMSMessage'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Publish a message
+      tags:
+      - messages
+  /messages/ws:
+    get:
+      consumes:
+      - application/json
+      description: Upgrade HTTP connection to WebSocket
+      produces:
+      - application/json
+      responses:
+        "101":
+          description: WebSocket connection established
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Upgrade to WebSocket
+      tags:
+      - messages
+securityDefinitions:
+  X-Require-Whisk-Auth:
+    description: Enter your API key
+    in: header
+    name: X-Require-Whisk-Auth
+    type: apiKey
+swagger: "2.0"

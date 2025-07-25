@@ -1,0 +1,137 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "SMS Gateway Server",
+        "title": "SMS Gateway",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:1949",
+    "basePath": "/api/v1",
+    "paths": {
+        "/messages/publish": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Publish a message to the server",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "messages"
+                ],
+                "summary": "Publish a message",
+                "parameters": [
+                    {
+                        "description": "Message to publish",
+                        "name": "message",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.SMSMessageRequestDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.SMSMessage"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/messages/ws": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Upgrade HTTP connection to WebSocket",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "messages"
+                ],
+                "summary": "Upgrade to WebSocket",
+                "responses": {
+                    "101": {
+                        "description": "WebSocket connection established",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "models.SMSMessage": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "deliveryStatus": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "phoneNumber": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.SMSMessageRequestDto": {
+            "type": "object",
+            "required": [
+                "message",
+                "phoneNumber"
+            ],
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "phoneNumber": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "X-Require-Whisk-Auth": {
+            "description": "Enter your API key",
+            "type": "apiKey",
+            "name": "X-Require-Whisk-Auth",
+            "in": "header"
+        }
+    }
+}
