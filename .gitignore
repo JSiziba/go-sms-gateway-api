@@ -25,3 +25,4 @@ certs/*
 /go-news-api
 .idea
 deploy.sh
+go-sms-gateway-api
